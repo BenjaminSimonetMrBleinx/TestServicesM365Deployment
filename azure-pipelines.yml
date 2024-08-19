@@ -1,19 +1,34 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
+trigger: none
 
-trigger:
-- main
+stages:
+- stage: DEV
+  jobs:
+  - job: CleanRepo
+    pool: Azure Pipelines
+    steps:
+    - checkout: self
+      persistCredentials: true
+      clean: true
 
-pool:
-  vmImage: ubuntu-latest
+  - job: Export
+    pool: Azure Pipelines
+    steps:
+    - task: PowerPlatformToolInstaller@2
+      inputs:
+        DefaultVersion: true
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+    - task: PowerPlatformWhoAmI@2
+      inputs:
+        authenticationType: 'PowerPlatformSPN'
+        PowerPlatformSPN: 'SPTel-PoCPatenteKDV_DEV-DV'
+        Environment: '$(PowerPlatform.EnvironmentURL_DEV-DV)'
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+    - task: PowerPlatformExportSolution@2
+      inputs:
+        authenticationType: 'PowerPlatformSPN'
+        PowerPlatformSPN: 'SPTel-PoCPatenteKDV_DEV-DV'
+        Environment: '$(PowerPlatform.EnvironmentURL_DEV-DV)'
+        SolutionName: '$(SolutionName)'
+        SolutionOutputFile: '$(Build.ArtifactStagingDirectory)/$(SolutionName).zip'
+        AsyncOperation: true
+        MaxAsyncWaitTime: '60'
