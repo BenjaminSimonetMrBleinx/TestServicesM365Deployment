@@ -13,22 +13,10 @@ stages:
   - job: Export
     pool: Azure Pipelines
     steps:
-    - task: PowerPlatformToolInstaller@2
-      inputs:
-        DefaultVersion: true
+    - powershell: |
+        Install-Module -Name Microsoft.PowerPlatform.Cds.Client -AllowClobber -Force
+      displayName: 'Install PowerPlatform Tools'
 
-    - task: PowerPlatformWhoAmI@2
-      inputs:
-        authenticationType: 'PowerPlatformSPN'
-        PowerPlatformSPN: 'SPTel-PoCPatenteKDV_DEV-DV'
-        Environment: '$(PowerPlatform.EnvironmentURL_DEV-DV)'
-
-    - task: PowerPlatformExportSolution@2
-      inputs:
-        authenticationType: 'PowerPlatformSPN'
-        PowerPlatformSPN: 'SPTel-PoCPatenteKDV_DEV-DV'
-        Environment: '$(PowerPlatform.EnvironmentURL_DEV-DV)'
-        SolutionName: '$(SolutionName)'
-        SolutionOutputFile: '$(Build.ArtifactStagingDirectory)/$(SolutionName).zip'
-        AsyncOperation: true
-        MaxAsyncWaitTime: '60'
+    - powershell: |
+        # Ton script pour exporter une solution de Power Platform
+      displayName: 'Exporter la solution Power Platform'
