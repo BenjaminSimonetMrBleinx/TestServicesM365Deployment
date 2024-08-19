@@ -17,7 +17,7 @@ stages:
       inputs:
         DefaultVersion: true
 
-    - task: PowerPlatformWhoAmI@1
+    - task: PowerPlatformWhoAmI@2
       inputs:
         authenticationType: 'PowerPlatformSPN'
         PowerPlatformSPN: 'SPTel-PoCPatenteKDV_DEV-DV'
